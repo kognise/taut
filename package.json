@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@slack/rtm-api": "^5.0.3",
+    "@slack/web-api": "^5.7.0",
+    "humanize-duration": "^3.21.0"
+  },
+  "devDependencies": {}
+}
