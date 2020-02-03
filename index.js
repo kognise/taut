@@ -122,7 +122,13 @@ const launchBot = async (token, commandRegex) => {
           response = responses[Math.floor(Math.random() * responses.length)]
         }
 
-        if (blacklistedChannels && blacklistedChannels.includes(event.channel)) {
+        if (
+          (blacklistedChannels && blacklistedChannels.includes(event.channel))
+          || (
+            config.blacklistedAutomationChannels
+            && config.blacklistedAutomationChannels.includes(event.channel)
+          )
+        ) {
           saveStats()
           return
         }
