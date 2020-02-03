@@ -68,7 +68,7 @@ const launchBot = async (token, commandRegex) => {
       }
     }
     
-    const ratelimited = Date.now() - stats.messages[team.id].lastMessage < config.timeout
+    const ratelimited = (Date.now() - stats.messages[team.id].lastMessage) < config.timeout
     if (event.user === self.id) return
 
     let gotFirstMatch = false
@@ -119,6 +119,7 @@ const launchBot = async (token, commandRegex) => {
 
       if (ratelimited || gotFirstMatch) continue
       gotFirstMatch = false
+
       if (match.test(event.text)) {
         if (responses) {
           response = responses[Math.floor(Math.random() * responses.length)]
@@ -135,6 +136,8 @@ const launchBot = async (token, commandRegex) => {
           return
         }
 
+        stats.messages[team.id].lastMessage = Date.now()
+
         await rtm.sendTyping(event.channel)
         const timeout = 50 + (response.length * 10) + Math.floor(Math.random() * 100)
         await wait(timeout)
@@ -147,7 +150,6 @@ const launchBot = async (token, commandRegex) => {
         })
 
         stats.messages[team.id].botMessages++
-        stats.messages[team.id].lastMessage = Date.now()
 
         saveStats()
         return
