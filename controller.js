@@ -125,5 +125,25 @@ module.exports.commands = {
     stats.messages[team.id].botMessages++
     saveStats()
     return true
+  },
+
+  pardon: async ({ body, event, web, stats, saveStats, team, self }) => {
+    const matches = body.match(userRegex)
+    if (self.id !== event.user || !matches) return
+
+    if (stats.shadowbanning[matches[1]]) {
+      stats.shadowbanning[matches[1]].score = 0
+    }
+
+    await web.chat.postMessage({
+      channel: event.channel,
+      thread_ts: event.thread_ts,
+      text: `:100: Cleared <@${matches[1]}>'s suspicion score, if they had one.`,
+      as_user: true
+    })
+
+    stats.messages[team.id].botMessages++
+    saveStats()
+    return true
   }
 }
