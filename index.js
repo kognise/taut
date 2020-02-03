@@ -77,7 +77,7 @@ const launchBot = async (token, commandRegex) => {
       if (stats.shadowbanning[event.user]) {
         const tracked = stats.shadowbanning[event.user]
 
-        if (Date.now() - tracked.lastMessage >= 300000 && tracked.score >= config.shadowbanThreshold + 10) {
+        if (Date.now() - tracked.lastMessage >= 120000 && tracked.score >= config.shadowbanThreshold) {
           tracked.score = 2
         }
 

@@ -52,7 +52,7 @@ This bot is primarily designed to pretend to be real person which means it needs
 
 Taut will analyze every message and use an algorithm to generate a score for each user on how likely they are to be trying to spam with the bot. By default Taut will automatically "shadowban" (silently stop responding to) users that exceed a certain score threshold.
 
-You can update the threshold with the configuration value `shadowbanThreshold`, or set it to `-1` to disable shadowbanning. Scores will be reset generally around 5 minutes which is often enough for people to cool down.
+You can update the threshold with the configuration value `shadowbanThreshold`, or set it to `-1` to disable shadowbanning. Scores will be reset generally around 2 minutes which is often enough for people to cool down.
 
 Taut can also ratelimit itself, the minimum amount of time between bot messages can be adjusted with `timeout` in the config.
 
