@@ -42,6 +42,12 @@ module.exports.validateConfig = (config) => {
     problems.push('timeout must be 0 or higher')
   }
 
+  if (typeof config.shadowbanThreshold !== 'number') {
+    problems.push(`shadowbanThreshold must be a number. if you don't want shadowbanning set it to -1`)
+  } else if (config.shadowbanThreshold < 6 && config.shadowbanThreshold !== -1) {
+    problems.push('shadowbanThreshold must be 6 or higher, or -1 to disable shadowbanning')
+  }
+
   if (typeof config.statsFile !== 'string') {
     problems.push('statsFile must be a string')
   } else if (config.statsFile.length < 1) {

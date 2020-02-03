@@ -11,6 +11,8 @@ const stats = fs.existsSync(config.statsFile)
   : {}
 const saveStats = () => fs.writeFileSync(config.statsFile, JSON.stringify(stats))
 
+const suspiciousUsers = {}
+
 const launchBot = async (token, commandRegex) => {
   const rtm = new RTMClient(token)
   const web = new WebClient(token)
@@ -46,7 +48,7 @@ const launchBot = async (token, commandRegex) => {
         body, event, web,
         stats, saveStats,
         config, self, team,
-        startup
+        startup, suspiciousUsers
       }
 
       let fine = false
@@ -64,9 +66,55 @@ const launchBot = async (token, commandRegex) => {
     }
     
     const ratelimited = Date.now() - stats[team.id].lastMessage < config.timeout
-    if (ratelimited || event.user === self.id) return
+    if (event.user === self.id) return
 
+    let gotFirstMatch = false
     for (let { match, responses, response, blacklistedChannels } of config.automations) {
+      const matches = match.test(event.text)
+      if (!matches) continue
+
+      if (suspiciousUsers[event.user]) {
+        const tracked = suspiciousUsers[event.user]
+
+        if (Date.now() - tracked.lastMessage >= 300000 && tracked.score >= config.shadowbanThreshold + 10) {
+          tracked.score = 2
+        }
+
+        let newScore = ratelimited ? 2 : 3
+
+        if (Date.now() - tracked.lastTrigger < 5000) {
+          newScore += 2
+        }
+
+        if (tracked.lastMessage.toLowerCase().replace(/\s+/g, '') === event.text.toLowerCase().replace(/\s+/g, '')) {
+          newScore--
+        }
+
+        if (gotFirstMatch) {
+          newScore--
+        }
+
+        tracked.lastTrigger = Date.now()
+        tracked.lastMessage += event.text
+        tracked.score += newScore
+      } else {
+        suspiciousUsers[event.user] = {
+          lastTrigger: Date.now(),
+          lastMessage: event.text,
+          score: 1
+        }
+      }
+
+      const suspicionScore = suspiciousUsers[event.user].score
+      if (config.shadowbanThreshold !== -1 && suspicionScore >= config.shadowbanThreshold) {
+        const info = await web.users.info({ user: event.user })
+        console.log(`> User ${info.user.real_name} seems to be spamming the bot and is shadowbanned`)
+        saveStats()
+        return
+      }
+
+      if (ratelimited || gotFirstMatch) continue
+      gotFirstMatch = false
       if (match.test(event.text)) {
         if (responses) {
           response = responses[Math.floor(Math.random() * responses.length)]
@@ -85,7 +133,6 @@ const launchBot = async (token, commandRegex) => {
         })
 
         stats[team.id].botMessages++
-        stats[team.id].userMessages++
         stats[team.id].lastMessage = Date.now()
 
         saveStats()

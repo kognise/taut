@@ -6,7 +6,10 @@ module.exports.aliases = {
   uinfo: 'dox',
   userinfo: 'dox',
   info: 'dox',
-  user: 'dox'
+  user: 'dox',
+  score: 'suspicionscore',
+  sus: 'suspicionscore',
+  spamscore: 'suspicionscore'
 }
 
 module.exports.commands = {
@@ -25,11 +28,12 @@ module.exports.commands = {
       as_user: true
     })
 
+    stats[team.id].botMessages++
     saveStats()
     return true
   },
 
-  dox: async ({ body, event, web, saveStats, config, self }) => {
+  dox: async ({ body, event, web, stats, saveStats, config, self, team }) => {
     const matches = body.match(userRegex)
     if (matches && event.user !== self.id) return false
     const user = matches ? matches[1] : event.user
@@ -65,6 +69,36 @@ module.exports.commands = {
       })
     }
 
+    stats[team.id].botMessages++
+    saveStats()
+    return true
+  },
+
+  suspicionscore: async ({ body, event, web, stats, saveStats, suspiciousUsers, team, config }) => {
+    const matches = body.match(userRegex)
+    const user = matches ? matches[1] : event.user
+    const isSender = user === event.user
+
+    const suspicionScore = suspiciousUsers[user] ? suspiciousUsers[user].score : 0
+    const shadowbanned = suspicionScore >= config.shadowbanThreshold
+
+    if (config.shadowbanThreshold === -1) {
+      await web.chat.postMessage({
+        channel: event.channel,
+        thread_ts: event.thread_ts,
+        text: `:warning: Shadowbanning isn't enabled for ${config.name}.`,
+        as_user: true
+      })
+    } else {
+      await web.chat.postMessage({
+        channel: event.channel,
+        thread_ts: event.thread_ts,
+        text: `${shadowbanned ? ':angry:' : ':hatched_chick:'} ${isSender ? 'Your' : 'Their'} suspicion score is *${suspicionScore}* out of the *${config.shadowbanThreshold}* required to be shadowbanned.`,
+        as_user: true
+      })
+    }
+
+    stats[team.id].botMessages++
     saveStats()
     return true
   }

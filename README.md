@@ -37,12 +37,13 @@ Now run `yarn start` to start the bot! If all went well everything should be wor
 
 ## Commands
 
-Right now Taut only supports 2 commands, contributions are welcome. Arguments in square brackets are optional and arguments in angle brackets are required.
+Right now Taut only supports 3 commands, contributions are welcome. Arguments in square brackets are optional and arguments in angle brackets are required.
 
-| Command    | Description                                              | Aliases           |
-| :--------: | :------------------------------------------------------: | :---------------: |
-| stats      | Get info about the bot and current workspace             | N/A               |
-| dox [user] | Get the profile of either the mentioned user or yourself | uinfo, info, user |
+| Command               | Description                                                      | Aliases               |
+| :-------------------: | :--------------------------------------------------------------: | :-------------------: |
+| stats                 | Get info about the bot and current workspace                     | N/A                   |
+| dox [user]            | Get the profile of either the mentioned user or yourself         | uinfo, info, user     |
+| suspicionscore [user] | Get the shadowban score of either the mentioned user or yourself | score, spamscore, sus |
 
 ## Credits
 
