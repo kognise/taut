@@ -139,7 +139,8 @@ const launchBot = async (token, commandRegex) => {
         stats.messages[team.id].lastMessage = Date.now()
 
         await rtm.sendTyping(event.channel)
-        const timeout = 50 + (response.length * 10) + Math.floor(Math.random() * 100)
+        const typingSpeed = 10 + Math.floor(Math.random() * 30)
+        const timeout = 50 + (response.length * typingSpeed) + Math.floor(Math.random() * 100)
         await wait(timeout)
 
         await web.chat.postMessage({
