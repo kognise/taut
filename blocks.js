@@ -74,3 +74,37 @@ module.exports.getDoxBlocks = (info) => [
     }
   }
 ]
+
+module.exports.getCoronaBlocks = (stats) => [
+  {
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: `
+:eyes: *2019-nCoV Status*
+It's been spreading for around ${humanize(stats.timeSinceStart, { conjunction: ' and ', largest: 2 })}. Yoinks!
+      `.trim()
+    }
+  },
+  {
+    type: 'section',
+    fields: [
+      {
+        type: 'mrkdwn',
+        text: `:mask: Confirmed Cases: *${stats.confirmedCases}*`
+      },
+      {
+        type: 'mrkdwn',
+        text: `:skull: Deaths: *${stats.deaths}*`
+      },
+      {
+        type: 'mrkdwn',
+        text: `:muscle: Recoveries: *${stats.recovered}*`
+      },
+      {
+        type: 'mrkdwn',
+        text: `:minibus: Regions: *${stats.affectedRegions}*`
+      }
+    ]
+  }
+]

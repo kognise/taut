@@ -1,4 +1,5 @@
-const { getDoxBlocks, getStatsBlocks } = require('./blocks')
+const { getCoronaStats } = require('./corona')
+const { getDoxBlocks, getStatsBlocks, getCoronaBlocks } = require('./blocks')
 
 const userRegex = /<@([UW][A-Z0-9]{8})>/
 
@@ -9,7 +10,10 @@ module.exports.aliases = {
   user: 'dox',
   score: 'suspicionscore',
   sus: 'suspicionscore',
-  spamscore: 'suspicionscore'
+  spamscore: 'suspicionscore',
+  corona: 'coronavirus',
+  coronastats: 'coronavirus',
+  coronastatus: 'coronavirus'
 }
 
 module.exports.commands = {
@@ -97,6 +101,26 @@ module.exports.commands = {
         as_user: true
       })
     }
+
+    stats.messages[team.id].botMessages++
+    saveStats()
+    return true
+  },
+
+  coronavirus: async ({ event, web, stats, saveStats, team, config }) => {
+    const coronaStats = await getCoronaStats()
+
+    await web.chat.postMessage({
+      channel: event.channel,
+      thread_ts: event.thread_ts,
+      attachments: [
+        {
+          color: config.color,
+          blocks: getCoronaBlocks(coronaStats)
+        }
+      ],
+      as_user: true
+    })
 
     stats.messages[team.id].botMessages++
     saveStats()

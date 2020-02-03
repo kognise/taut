@@ -5,7 +5,10 @@
   "dependencies": {
     "@slack/rtm-api": "^5.0.3",
     "@slack/web-api": "^5.7.0",
-    "humanize-duration": "^3.21.0"
+    "autodetect-decoder-stream": "^1.0.3",
+    "csv-reader": "^1.0.6",
+    "humanize-duration": "^3.21.0",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {}
 }

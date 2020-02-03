@@ -54,9 +54,9 @@ const launchBot = async (token, commandRegex) => {
 
       let fine = false
       if (aliases[trigger]) {
-        fine = commands[aliases[trigger]](data)
+        fine = await commands[aliases[trigger]](data)
       } else if (commands[trigger]) {
-        fine = commands[trigger](data)
+        fine = await commands[trigger](data)
       }
 
       if (fine) {
