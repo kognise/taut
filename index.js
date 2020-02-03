@@ -14,6 +14,8 @@ const stats = fs.existsSync(config.statsFile)
   }
 const saveStats = () => fs.writeFileSync(config.statsFile, JSON.stringify(stats))
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 const launchBot = async (token, commandRegex) => {
   const rtm = new RTMClient(token)
   const web = new WebClient(token)
@@ -132,6 +134,10 @@ const launchBot = async (token, commandRegex) => {
           saveStats()
           return
         }
+
+        await rtm.sendTyping(event.channel)
+        const timeout = 50 + (response.length * 10) + Math.floor(Math.random() * 100)
+        await wait(timeout)
 
         await web.chat.postMessage({
           channel: event.channel,
