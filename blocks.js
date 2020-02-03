@@ -17,15 +17,15 @@ module.exports.getStatsBlocks = (config, startup, stats, team) => [
       },
       {
         type: 'mrkdwn',
-        text: `:eyes: Messages: *${stats[team.id].messages}*`
+        text: `:eyes: Messages: *${stats.messages[team.id].messages}*`
       },
       {
         type: 'mrkdwn',
-        text: `:sunglasses: Your Messages: *${stats[team.id].userMessages}*`
+        text: `:sunglasses: Your Messages: *${stats.messages[team.id].userMessages}*`
       },
       {
         type: 'mrkdwn',
-        text: `:robot_face: My Messages: *${stats[team.id].botMessages} (${Math.round((stats[team.id].botMessages / stats[team.id].userMessages) * 100)}%)*`
+        text: `:robot_face: My Messages: *${stats.messages[team.id].botMessages} (${Math.round((stats.messages[team.id].botMessages / stats.messages[team.id].userMessages) * 100)}%)*`
       }
     ]
   }

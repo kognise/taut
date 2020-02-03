@@ -54,6 +54,22 @@ module.exports.validateConfig = (config) => {
     problems.push('statsFile should be one or more characters long')
   }
 
+  if (config.blacklistedAutomationChannels) {
+    if (!Array.isArray(config.blacklistedAutomationChannels)) {
+      problems.push('blacklistedAutomationChannels must be an array')
+    } else {
+      for (let i = 0; i < config.blacklistedAutomationChannels.length; i++) {
+        const channel = config.blacklistedAutomationChannels[i]
+
+        if (typeof channel !== 'string') {
+          problems.push(`blacklistedAutomationChannels[${i}] must be a string`)
+        } else if (!channelRegex.test(channel)) {
+          problems.push(`blacklistedAutomationChannels[${i}] doesn't look like a valid channel id`)
+        }
+      }
+    }
+  }
+
   if (!Array.isArray(config.automations)) {
     problems.push(`automations must be an array. if you don't want any automations make an empty array`)
   } else {

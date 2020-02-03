@@ -8,10 +8,11 @@ const { validateConfig } = require('./schema')
 
 const stats = fs.existsSync(config.statsFile)
   ? JSON.parse(fs.readFileSync(config.statsFile))
-  : {}
+  : {
+    messages: {},
+    shadowbanning: {}
+  }
 const saveStats = () => fs.writeFileSync(config.statsFile, JSON.stringify(stats))
-
-const suspiciousUsers = {}
 
 const launchBot = async (token, commandRegex) => {
   const rtm = new RTMClient(token)
@@ -21,8 +22,8 @@ const launchBot = async (token, commandRegex) => {
   const startup = Date.now()
   console.log(`> Bot started in ${team.name} (${team.id})`)
 
-  if (!stats[team.id]) {
-    stats[team.id] = {
+  if (!stats.messages[team.id]) {
+    stats.messages[team.id] = {
       lastMessage: 0,
       messages: 0,
       userMessages: 0,
@@ -34,9 +35,9 @@ const launchBot = async (token, commandRegex) => {
   rtm.on('message', async (event) => {
     if (event.subtype) return
 
-    stats[team.id].messages++
+    stats.messages[team.id].messages++
     if (event.user === self.id) {
-      stats[team.id].userMessages++
+      stats.messages[team.id].userMessages++
     }
 
     const matches = event.text.trim().match(commandRegex)
@@ -48,7 +49,7 @@ const launchBot = async (token, commandRegex) => {
         body, event, web,
         stats, saveStats,
         config, self, team,
-        startup, suspiciousUsers
+        startup
       }
 
       let fine = false
@@ -65,7 +66,7 @@ const launchBot = async (token, commandRegex) => {
       }
     }
     
-    const ratelimited = Date.now() - stats[team.id].lastMessage < config.timeout
+    const ratelimited = Date.now() - stats.messages[team.id].lastMessage < config.timeout
     if (event.user === self.id) return
 
     let gotFirstMatch = false
@@ -73,8 +74,8 @@ const launchBot = async (token, commandRegex) => {
       const matches = match.test(event.text)
       if (!matches) continue
 
-      if (suspiciousUsers[event.user]) {
-        const tracked = suspiciousUsers[event.user]
+      if (stats.shadowbanning[event.user]) {
+        const tracked = stats.shadowbanning[event.user]
 
         if (Date.now() - tracked.lastMessage >= 300000 && tracked.score >= config.shadowbanThreshold + 10) {
           tracked.score = 2
@@ -98,17 +99,18 @@ const launchBot = async (token, commandRegex) => {
         tracked.lastMessage += event.text
         tracked.score += newScore
       } else {
-        suspiciousUsers[event.user] = {
+        stats.shadowbanning[event.user] = {
           lastTrigger: Date.now(),
           lastMessage: event.text,
           score: 1
         }
       }
 
-      const suspicionScore = suspiciousUsers[event.user].score
+      const suspicionScore = stats.shadowbanning[event.user].score
       if (config.shadowbanThreshold !== -1 && suspicionScore >= config.shadowbanThreshold) {
         const info = await web.users.info({ user: event.user })
         console.log(`> User ${info.user.real_name} seems to be spamming the bot and is shadowbanned`)
+
         saveStats()
         return
       }
@@ -132,8 +134,8 @@ const launchBot = async (token, commandRegex) => {
           as_user: true
         })
 
-        stats[team.id].botMessages++
-        stats[team.id].lastMessage = Date.now()
+        stats.messages[team.id].botMessages++
+        stats.messages[team.id].lastMessage = Date.now()
 
         saveStats()
         return
@@ -158,7 +160,9 @@ if (problems.length === 0) {
 } else if (problems.length === 1) {
   console.log('> One problem was found with your config:')
   console.log(problems[0])
+  process.exit(1)
 } else {
   console.log(`> There are ${problems.length} problems with your config:`)
   console.log(problems.map((problem) => `- ${problem}`).join('\n'))
+  process.exit(1)
 }

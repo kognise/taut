@@ -28,7 +28,7 @@ module.exports.commands = {
       as_user: true
     })
 
-    stats[team.id].botMessages++
+    stats.messages[team.id].botMessages++
     saveStats()
     return true
   },
@@ -69,17 +69,17 @@ module.exports.commands = {
       })
     }
 
-    stats[team.id].botMessages++
+    stats.messages[team.id].botMessages++
     saveStats()
     return true
   },
 
-  suspicionscore: async ({ body, event, web, stats, saveStats, suspiciousUsers, team, config }) => {
+  suspicionscore: async ({ body, event, web, stats, saveStats, team, config }) => {
     const matches = body.match(userRegex)
     const user = matches ? matches[1] : event.user
     const isSender = user === event.user
 
-    const suspicionScore = suspiciousUsers[user] ? suspiciousUsers[user].score : 0
+    const suspicionScore = stats.shadowbanning[user] ? stats.shadowbanning[user].score : 0
     const shadowbanned = suspicionScore >= config.shadowbanThreshold
 
     if (config.shadowbanThreshold === -1) {
@@ -98,7 +98,7 @@ module.exports.commands = {
       })
     }
 
-    stats[team.id].botMessages++
+    stats.messages[team.id].botMessages++
     saveStats()
     return true
   }
