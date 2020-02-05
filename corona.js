@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const CSVStream = require('csv-reader')
 const DecoderStream = require('autodetect-decoder-stream')
 
-const sheet = 'https://docs.google.com/spreadsheets/d/1ZJCEHKijIMVSJvH74C-LIUJb7BAHqj6b/export?usp=sharing&format=csv'
+const sheet = 'https://docs.google.com/spreadsheets/d/1wQVypefm946ch4XDp37uZ-wartW4V7ILdg-qYiDXUHM/export?usp=sharing&format=csv'
 const start = 1579150800000
 
 module.exports.getCoronaStats = () => fetch(sheet).then((res) => new Promise((resolve) => {
