@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const CSVStream = require('csv-reader')
 const DecoderStream = require('autodetect-decoder-stream')
 
-const directory = 'https://api.github.com/repos/CSSEGISandData/2019-nCoV/contents/daily_case_updates'
+const directory = 'https://api.github.com/repos/CSSEGISandData/2019-nCoV/contents/csse_covid_19_data/csse_covid_19_daily_reports'
 const start = 1579150800000
 
 let lastFetch = 0
@@ -14,7 +14,6 @@ let files = null
 module.exports.getCoronaStats = async () => {
   if (Date.now() - lastFetch > 60000 || !files) {
     const res1 = await fetch(directory)
-    // console.log(res1.headers)
     files = await res1.json()
     lastFetch = Date.now()
   }
@@ -50,3 +49,4 @@ module.exports.getCoronaStats = async () => {
   const timeSinceStart = Date.now() - start
   return { affectedRegions, confirmedCases, deaths, timeSinceStart, recovered }
 }
+

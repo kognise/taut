@@ -81,7 +81,7 @@ module.exports.getCoronaBlocks = (stats) => [
     text: {
       type: 'mrkdwn',
       text: `
-:eyes: *2019-nCoV Status*
+:eyes: *COVID-19 Status*
 It's been spreading for around ${humanize(stats.timeSinceStart, { conjunction: ' and ', largest: 2 })}. Yoinks!
       `.trim()
     }
