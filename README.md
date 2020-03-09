@@ -43,9 +43,10 @@ Right now Taut only supports 5 commands, contributions are welcome. Arguments in
 | :-------------------: | :--------------------------------------------------------------: | :-------------------------------: |
 | stats                 | Get info about the bot and current workspace                     | N/A                               |
 | dox [user]            | Get the profile of either the mentioned user or yourself         | uinfo, info, user                 |
-| suspicionscore [user] | Get the shadowban score of either the mentioned user or yourself | score, spamscore, sus             |
 | pardon <user>         | Clears the suspicion score of a user, if you're the bot owner    | N/A                               |
 | coronavirus           | Get statistics on the new Coronavirus (2019-nCoV)                | corona, coronastats, coronastatus |
+
+There used to be a command to get your suspicion score, that's been removed due to excessive spam.
 
 ## Spam Prevention
 
