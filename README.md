@@ -100,6 +100,8 @@ module.exports = {
 }
 ```
 
+For each automation you can also specify a `probability` field between 0 and 1 that will decide how often it shows up. This is helpful if a command is being too spammy.
+
 ### Icky Channels
 
 Some of your automations might not be appropriate in channels, or you might want to ban some channels altogether! This is where two new configuration options come in.

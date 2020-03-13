@@ -15,6 +15,7 @@ const stats = fs.existsSync(config.statsFile)
 const saveStats = () => fs.writeFileSync(config.statsFile, JSON.stringify(stats))
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const p = (probability) => probability === undefined ? true : Math.random() <= probability
 
 const launchBot = async (token, commandRegex) => {
   const rtm = new RTMClient(token)
@@ -72,7 +73,7 @@ const launchBot = async (token, commandRegex) => {
     if (event.user === self.id) return
 
     let gotFirstMatch = false
-    for (let { match, responses, response, blacklistedChannels } of config.automations) {
+    for (let { match, responses, response, blacklistedChannels, probability } of config.automations) {
       const matches = match.test(event.text)
       if (!matches) continue
 
@@ -132,6 +133,11 @@ const launchBot = async (token, commandRegex) => {
             && config.blacklistedAutomationChannels.includes(event.channel)
           )
         ) {
+          saveStats()
+          return
+        }
+
+        if (!p(probability)) {
           saveStats()
           return
         }

@@ -106,6 +106,14 @@ module.exports.validateConfig = (config) => {
         problems.push(`you must have either automations[${i}].response or automations[${i}].responses`)
       }
 
+      if (automation.probability !== undefined) {
+        if (typeof automation.probability !== 'number') {
+          problems.push(`automations[${i}].probability must be a number`)
+        } else if (automation.probability < 0 || automation.probability > 1) {
+          problems.push(`automations[${i}].probability must be between 0 and 1`)
+        }
+      }
+
       if (automation.blacklistedChannels) {
         if (!Array.isArray(automation.blacklistedChannels)) {
           problems.push(`automations[${i}].blacklistedChannels must be an array`)
