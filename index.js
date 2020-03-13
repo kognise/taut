@@ -146,7 +146,7 @@ const launchBot = async (token, commandRegex) => {
 
         await wait(100 + Math.floor(Math.random() * 20))
         await rtm.sendTyping(event.channel)
-        const typingSpeed = 10 + Math.floor(Math.random() * 30)
+        const typingSpeed = 20 + Math.floor(Math.random() * 30)
         const timeout = 50 + (response.length * typingSpeed) + Math.floor(Math.random() * 100)
         await wait(timeout)
 
