@@ -1,5 +1,5 @@
 const tokenLink = 'https://api.slack.com/legacy/custom-integrations/legacy-tokens'
-const tokenRegex = /^xoxp-[0-9]{10,12}-[0-9]{10,12}-[0-9]{10,12}-[a-z0-9]{32}$/i
+const tokenRegex = /^xox(?:s|p|c|a-2)-.+$/i
 const colorRegex = /^#[a-f0-9]{6}$/i
 const channelRegex = /^C[A-Z0-9]{8}$/
 

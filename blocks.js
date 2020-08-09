@@ -1,5 +1,13 @@
 const humanize = require('humanize-duration')
 
+const formatNumber = (number) => {
+  return [ ...number.toString() ].reduce((p, c, i) => {
+    if ((i - number.toString().length % 3) % 3 === 0 && i !== 0) {
+      return p + ',' + c
+    } else return p + c
+  }, '')
+}
+
 module.exports.getStatsBlocks = (config, startup, stats, team) => [
   {
     type: 'section',
@@ -17,15 +25,15 @@ module.exports.getStatsBlocks = (config, startup, stats, team) => [
       },
       {
         type: 'mrkdwn',
-        text: `:eyes: Messages: *${stats.messages[team.id].messages}*`
+        text: `:eyes: Messages: *${formatNumber(stats.messages[team.id].messages)}*`
       },
       {
         type: 'mrkdwn',
-        text: `:sunglasses: Your Messages: *${stats.messages[team.id].userMessages}*`
+        text: `:sunglasses: Your Messages: *${formatNumber(stats.messages[team.id].userMessages)}*`
       },
       {
         type: 'mrkdwn',
-        text: `:robot_face: My Messages: *${stats.messages[team.id].botMessages} (${Math.round((stats.messages[team.id].botMessages / stats.messages[team.id].userMessages) * 100)}%)*`
+        text: `:robot_face: My Messages: *${formatNumber(stats.messages[team.id].botMessages)} (${Math.round((stats.messages[team.id].botMessages / stats.messages[team.id].userMessages) * 100)}%)*`
       }
     ]
   }
@@ -91,19 +99,19 @@ It's been spreading for around ${humanize(stats.timeSinceStart, { conjunction: '
     fields: [
       {
         type: 'mrkdwn',
-        text: `:mask: Confirmed Cases: *${stats.confirmedCases}*`
+        text: `:mask: Confirmed Cases: *${formatNumber(stats.confirmedCases)}*`
       },
       {
         type: 'mrkdwn',
-        text: `:skull: Deaths: *${stats.deaths}*`
+        text: `:skull: Deaths: *${formatNumber(stats.deaths)}*`
       },
       {
         type: 'mrkdwn',
-        text: `:muscle: Recoveries: *${stats.recovered}*`
+        text: `:muscle: Recoveries: *${formatNumber(stats.recovered)}*`
       },
       {
         type: 'mrkdwn',
-        text: `:minibus: Regions: *${stats.affectedRegions}*`
+        text: `:minibus: Regions: *${formatNumber(stats.affectedRegions)}*`
       }
     ]
   }

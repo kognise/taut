@@ -1,7 +1,7 @@
 const { getCoronaStats } = require('./corona')
 const { getDoxBlocks, getStatsBlocks, getCoronaBlocks } = require('./blocks')
 
-const userRegex = /<@([UW][A-Z0-9]{8})>/
+const userRegex = /<@([UW][A-Z0-9]{8-10})>/
 
 module.exports.aliases = {
   uinfo: 'dox',
@@ -37,6 +37,7 @@ module.exports.commands = {
   dox: async ({ body, event, web, stats, saveStats, config, self, team }) => {
     const matches = body.match(userRegex)
     if (matches && event.user !== self.id) return false
+    console.log('matched!')
     const user = matches ? matches[1] : event.user
 
     let info 
