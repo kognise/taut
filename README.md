@@ -1,3 +1,7 @@
+> 🚧 **This project is maintenance mode!** 🚧
+> 
+> I will be fixing and responding to pull requests and issues, but it is not in active development.
+
 <div align='center'>
   <h1><img src='readme-banner.png' alt='Taut'></h1>
   <p>🤖 The best selfbot for Slack</p>
